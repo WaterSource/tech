@@ -1,4 +1,4 @@
-## GCD 多线程
+## GCD 多线程 锁
 
 ### GCD
 
@@ -371,16 +371,190 @@ NSBlockOperation *op3 = [NSBlockOperation blockOperationWithBlock:^{
 NSLog(@"come here");
 ```
 
+### 例题
+
+GCD和NSThread的区别是？
+
+答：
+
+GCD操作队列，NSThread操作线程;
+
 ### 锁
 
 多个线程访问同一块资源读写，随意访问产生数据错乱引发的数据问题；
 
-- os_unfair_lock
 - dispatch_semaphore
-- dispatch_mutex
-- dispatch_queue 串行
 - NSLock
-- @synchronized 性能最差
+- NSCondition
+- NSRecursiveLock
+- NSConditionLock
+- @synchronized
 
+![](https://tva1.sinaimg.cn/large/006y8mN6gy1g7dx6fch6nj30tg0j0myr.jpg)
 
+#### 自旋锁
 
+用于多线程同步，线程会反复检查锁变量是否可用。由于线程在这一过程中保持执行，是一种**忙等待**。一旦获取了自旋锁，线程会一直保持该锁，直至显式释放自旋锁。 自旋锁避免了进程上下文的调度开销，因此对于线程只会阻塞很短时间的场合是有效的。
+
+- OSSpinLock (已经废弃了，在某些场景不再安全，编译会有警告)
+
+```
+OSSpinLock lock = OS_SPINLOCK_INIT;
+OSSpinLockLock(&lock);
+...
+OSSpinLockUnlock(&lock);
+```
+
+- os_unfair_lock(互斥锁，官方替换OSSpinLock的方案，iOS10以上可用)
+
+```
+os_unfair_lock_t unfairLock;
+unfairLock = &(OS_UNFAIR_LOCK_INIT);
+os_unfair_lock_lock(unfairLock);
+...
+os_unfair_lock_unlock(unfairLock);
+```
+
+#### 互斥锁
+
+是一种用于多线程编程中，防止两条线程同时对同一公共资源（比如全局变量）进行读写的机制。该目的通过将代码切片成一个一个的临界区而达成。
+
+- NSLock
+- NSCondition
+- NSConditionLock
+- NSRecursiveLock
+
+```
+// AFNetworking AFURLSessionManager.m
+
+- (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration *)configuration {
+    ...
+    self.lock = [[NSLock alloc] init];
+    self.lock.name = AFURLSessionManagerLockName;
+    ...
+}
+
+- (void)setDelegate:(AFURLSessionManagerTaskDelegate *)delegate
+            forTask:(NSURLSessionTask *)task
+{
+    ...
+    [self.lock lock];
+    self.mutableTaskDelegatesKeyedByTaskIdentifier[@(task.taskIdentifier)] = delegate;
+    [delegate setupProgressForTask:task];
+    [self addNotificationObserverForTask:task];
+    [self.lock unlock];
+}
+```
+
+- pthread_mutex
+
+```
+// YYKit YYMemoryCach
+
+- (instancetype)init {
+    ...
+    pthread_mutex_init(&_lock, NULL);
+    ...
+}
+
+- (void)_trimToCost:(NSUInteger)costLimit {
+    BOOL finish = NO;
+    pthread_mutex_lock(&_lock);
+    if (costLimit == 0) {
+        [_lru removeAll];
+        finish = YES;
+    } else if (_lru->_totalCost <= costLimit) {
+        finish = YES;
+    }
+    pthread_mutex_unlock(&_lock);
+    if (finish) return;
+    
+    NSMutableArray *holder = [NSMutableArray new];
+    while (!finish) {
+        if (pthread_mutex_trylock(&_lock) == 0) {
+            if (_lru->_totalCost > costLimit) {
+                _YYLinkedMapNode *node = [_lru removeTailNode];
+                if (node) [holder addObject:node];
+            } else {
+                finish = YES;
+            }
+            pthread_mutex_unlock(&_lock);
+        } else {
+            usleep(10 * 1000); //10 ms
+        }
+    }
+   ...
+}
+```
+
+- @synchronized
+
+```
+// AFNetworking isNetworkActivityOccurring
+
+- (BOOL)isNetworkActivityOccurring {
+    @synchronized(self) {
+        return self.activityCount > 0;
+    }
+}
+```
+
+#### 读写锁
+
+是计算机程序的并发控制的一种同步机制，也称“共享-互斥锁”、多读者-单写者锁) 用于解决多线程对公共资源读写问题。读操作可并发重入，写操作是互斥的。 读写锁通常用互斥锁、条件变量、信号量实现。
+
+- pthread_rwlock
+
+```
+// 读锁
+pthread_rwlock_rdlock(&rwlock);
+pthread_rwlock_unlock(&rwlock);
+
+// 写锁
+pthread_rwlock_wrlock(&rwlock);
+pthread_rwlock_unlock(&rwlock);
+```
+
+#### 信号量
+
+是一种更高级的同步机制，**互斥锁**可以说是semaphore在仅取值0/1时的特例。**信号量**可以有更多的取值空间，用来实现更加复杂的同步，而不单单是线程间互斥。
+
+#### 条件锁
+
+就是条件变量，当进程的某些资源要求不满足时就进入休眠，也就是锁住了。当资源被分配到了，条件锁打开，进程继续运行。
+
+- NSCondition
+
+- NSConditionLock
+
+#### 递归锁
+
+同一个线程可以加锁N次而不会发生死锁。
+
+- NSRecursiveLock
+
+```
+// YYKit YYWebImageOperation.m
+_lock = [NSRecursiveLock new];
+
+- (void)dealloc {
+	[_lock lock];
+	...
+	[_lock unlock];
+}
+```
+
+- pthread_mutex(recursive)
+
+pthread_mutex也支持递归，需要设置类型为`PTHREAD_MUTEX_RECURSIVE`
+
+```
+pthread_mutex_t lock;
+pthread_mutexattr_t attr;
+pthread_mutexattr_init(&attr);
+pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+pthread_mutex_init(&lock, &attr);
+pthread_mutexattr_destroy(&attr);
+pthread_mutex_lock(&lock);
+pthread_mutex_unlock(&lock);
+```

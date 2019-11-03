@@ -237,6 +237,8 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 顺序如下:
 
+![](https://tva1.sinaimg.cn/large/006y8mN6gy1g8g7pywzopj30zy0ro7b7.jpg)
+
 1. 通知run loop已经启动
 2. 通知定时器即将要开始
 3. 通知有非基于端口的源即将启动

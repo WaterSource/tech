@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios'>
+    <pages>
+        <page name='Untitled Page'/>
+        <page name='反转字符串'/>
+        <page name='整数反转'/>
+        <page name='字符串中的第一个唯一字符'/>
+        <page name='有效的字母异位词'/>
+        <page name='验证回文字符串'/>
+        <page name='字符串转换整数atoi'/>
+        <page name='实现strStr()'/>
+        <page name='报数'/>
+        <page name='最长公共前缀'/>
+    </pages>
+</playground>

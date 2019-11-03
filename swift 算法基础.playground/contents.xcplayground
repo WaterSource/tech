@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios'>
+    <pages>
+        <page name='string'/>
+        <page name='栈'/>
+        <page name='链表'/>
+        <page name='二叉树'/>
+        <page name='排序'/>
+        <page name='九章算法'/>
+        <page name='从排序数组中删除重复项'/>
+        <page name='买卖股票的最佳时机'/>
+        <page name='旋转数组'/>
+        <page name='存在重复'/>
+        <page name='只出现一次的数字'/>
+        <page name='两个数组的交集'/>
+        <page name='加一'/>
+        <page name='移动零'/>
+        <page name='两数之和'/>
+        <page name='有效的数独'/>
+        <page name='旋转图像'/>
+    </pages>
+</playground>

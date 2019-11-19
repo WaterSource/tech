@@ -131,11 +131,11 @@ func merge(array: inout [Int], _ helper: inout [Int], _ low: Int, _ middle: Int,
     }
 }
 
-//var testListA = testList
-//print("归并排序开始", testListA)
-//var helperListA = Array(repeating: 0, count: testListA.count)
-//mergeSort(array: &testListA, &helperListA, 0, testListA.count-1)
-//print("归并排序", testListA)
+var testListA = testList
+print("归并排序开始", testListA)
+var helperListA = Array(repeating: 0, count: testListA.count)
+mergeSort(array: &testListA, &helperListA, 0, testListA.count-1)
+print("归并排序", testListA)
 
 // 快速排序 O(nlogn)
 // 分块分基准数，按大小放置在基准数两侧

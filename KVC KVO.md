@@ -18,6 +18,15 @@ key value coding
 - (void)setValue:(nullable id)value forKeyPath:(NSString *)keyPath;  
 ```
 
+#### KVC的底层实现
+
+当一个对象调用`setValue`方法时，方法内部会做以下操作
+
+* 检查是否存在相应key的set方法，如果存在，就调用set方法；
+* 如果set方法不存在，就会查找和key相同名称且带下划线的成员属性，如果有，则直接给成员属性赋值；
+* 如果没有找到_key，就会查找相同名称的属性key，如果有就直接赋值；
+* 如果还没有找到，则调用`valueForUndefinedKey:`和`setValue: forUndefinedKey:`；
+
 ### KVO
 
 当你观察一个对象时，一个新的类会动态被创建。这个类继承自该对象的原本的类，并重写了被观察属性的 `setter` 方法。自然，重写的 `setter` 方法会负责在调用原 `setter` 方法之前和之后，通知所有观察对象值的更改。最后把这个对象的 isa 指针 ( isa 指针告诉 Runtime 系统这个对象的类是什么 ) 指向这个新创建的子类，对象就神奇的变成了新创建的子类的实例。

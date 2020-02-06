@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios'>
+    <pages>
+        <page name='Fizz Buzz'/>
+        <page name='计数质数'/>
+        <page name='3的幂'/>
+        <page name='罗马数字转整数'/>
+    </pages>
+</playground>

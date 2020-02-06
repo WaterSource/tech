@@ -74,6 +74,7 @@ print("二叉树深度:", maxDepth(root: testTree))
 //}
 
 // 二叉树前序遍历
+// 根 - 左 - 右
 
 func preorderTraversalA(root: TreeNode?) -> [String] {
     var res = [String]()
@@ -110,7 +111,7 @@ func preorderTraversalB(root: TreeNode?, res: inout [String]) -> [String] {
 //print("二叉树前序遍历", preorderTraversalB(root: testTree, res: &tmpPreOrderResultB))
 
 // 二叉树中序遍历
-
+// 左 - 根 - 右
 func inorderTraversalA(root: TreeNode?) -> [String] {
     var res = [String]()
     var stack = [TreeNode]()
@@ -147,7 +148,7 @@ func inorderTraversalB(root: TreeNode?, res: inout [String]) -> [String] {
 //print("二叉树中序遍历", inorderTraversalB(root: testTree, res: &tmpInorderResultB))
 
 // 二叉树后序遍历
-
+// 左 - 右 - 根
 func postorderTraversalA(root: TreeNode?) -> [String] {
     guard let root = root else {
         return []

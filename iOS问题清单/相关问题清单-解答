@@ -1,0 +1,171 @@
+相关问题清单-解答
+
+1. oc的方法调用都是向对象发送消息，通过runtime将方法转换为msgsend；
+静态方法解析 方法缓存 方法列表 父类 
+动态方法解析 动态添加方法接收消息 【返回NO】
+快速转发(备用接受者) 新建对象接收消息 【返回接收对象/nil】
+完整消息转发 对方法重新签名 【返回方法签名】，生成NSInvocation，分配给其他对象接收消息，或者丢弃消息 【处理消息】
+报错
+
+2. 
+实例对象的isa指针，指向对应的类对象，在类对象中可以找到实例方法和成员变量；
+类对象中的isa指针，指向对应的元类，保存所有的类方法；
+类对象的superclass指向父类的类对象，根类的superclass为nil；
+元类的isa指向基类，superclass指向父类的元类，根类的superclass指向NSObject；
+
+3. 
+OC的内存是由引用计数控制的，引用计数为0的时候会释放对象；
+MRC下，需要用户手动管理引用计数，手动添加retain、release、autorelease方法；
+ARC下，编译器会在合适的位置自动插入retain、release、autorelease方法。并且有一些优化操作，针对成对出现的retain、release方法会合并；优化掉一些autorelease的场景(函数返回之后马上有retain的场景，和autorelease合并)；
+
+4.
+手动添加的情况，在其作用域的变量会加入autoreleasepool；
+非手动添加的情况，调用了autorelease方法的变量会加入当前的pool；
+
+5.
+是由固定大小的autoreleasepage组成的双向链表；
+
+6.
+在runloop中注册了3个observer
+准备启动的时候，注册了优先级最高的observer，初始化pool；
+准备休眠的时候，注册了优先级最低的observer，释放掉旧的pool，初始化新的pool；
+准备推出的时候，注册了优先级最低的observer，释放掉pool；
+
+7. 
+在最后一次release方法执行后，调用dealloc；
+父类的dealloc方法在子类dealloc方法返回后自动调用；
+在根类NSObject的dealloc方法中
+	去除了动态增加的属性
+	清空引用计数表和弱引用表，将所有weak引用指向nil
+
+8.
+主线程的runloop自动开启，子线程的runloop需要手动开启；
+runloop会在首次主动获取的时候创建对象；
+runloop对象和线程的关系保存在全局的字典中；
+runloop会在线程销毁的时候释放；
+
+9. 
+有任务的时候执行任务，没有任务的时候让线程休眠；
+
+10.
+runloop在某一时刻只能运行在一个mode下，切换mode需要停下当前执行的mode；commonmode内的任务会同步到当前正在执行的mode下；
+
+11.
+runloop准备启动
+timer准备启动
+检查是否有准备好的source0事件
+执行source0事件
+准备执行source1事件，回到步骤2
+准备休眠
+休眠
+收到事件准备唤醒runloop
+处理唤醒的事件，回到步骤2
+结束runloop
+
+12.
+GCD NSThread NSOperation
+
+13. 
+serial 串行
+concurrent 并行
+
+14.
+dispatch_group_t
+
+15.
+获取不到期待中的值，以及有其他替代的实现方式
+
+16.
+block是oc对象，isa指针指向 GloblBlock/mallocBlock/stackBlock - NSBlock - NSObject
+block是封装函数及其上下文的OC对象
+
+没有捕获auto变量的是全局
+捕获了auto变量的是stack
+stack调用了copy方法的是malloc
+
+17.
+因为函数作用域的问题，需要跨函数访问，需要捕获局部变量；
+临时变量是值传递
+静态变量是指针传递
+全局变量可以直接访问
+
+18.
+arc下在某些场景会自动给block调用copy方法
+作为函数返回值的
+调用cocoa api的系统方法，作为参数传递的
+GCD api的系统方法，作为参数传递的
+被强引用时
+
+19.
+__block修饰的auto变量允许在block内部做修改
+不能修饰static和全局变量
+用__block修饰的变量会被封装成对象
+block在栈上时，不会引用该变量对象
+block在堆上时，会按照内存修饰符引用该变量对象
+
+20.
+对象持有block，block引用了对象，产生了相互引用；
+
+21.
+添加KVO的时候，会动态增加一个子类
+重写对应的setter方法，增加willchangevalue，didchangevalue的调用
+class方法
+
+22. 
+手动调用willchangevalue，didchangevalue
+
+23.
+监听者释放，没有解除监听关系，再触发事件的时候，全局记录的监听与被监听关系，会向已经释放的野指针发送消息，导致crash；
+多次removeobserver，导致重复解除监听关系，系统报错；
+
+24.
+valueForKey:
+setValue: forKey:
+valueForKeyPath:
+setValue: forKeyPath:
+
+25.
+设置 set<Key>, _<key>, _is<Key>, <key>, is<Key>
+读取 get<Key>, <key>, is<Key>
+NSKeyValueArray
+NSSet
+
+26.
+Extension可以理解为匿名的category，需要有类的源码，能够添加实例变量和方法，在编译期就已经生效了；
+Category不能添加实例变量，可以增加或者重写方法，在运行时生效；
+
+27.
+底层架构中 有方法列表，关联对象列表，协议数据
+在调用分类的时候，同步到类中，方法调用时会优先使用分类的实现
+
+28.
+category声明的属性不会自动生成setter/getter方法和实例变量
+分类是在运行时才动态添加到对象的结构体中的
+因为实例变量是定义在类的结构体中，编译期就已经决定了整个类的内存空间，实例变量的大小也已经决定了
+
+29.
+在启动过程中，加载完所有类文件之后
+按照父类 子类 分类的顺序执行load方法
+多个分类的load方法会按照加载的顺序都执行一次
+不需要主动调用[super load]
+
+30.
+load方法是在应用启动的时候，按照父类-子类-分类的顺序，每个类装载的时候都会调用一次；
+子类实现不需要[super load]
+如果子类没有实现load方法，不会去调用父类方法；
+
+initialize方法是在第一次调用类的方法的时候调用
+触发的时候，父类的initialize方法也会触发，父类的调用结束会调用子类的；
+当子类没有实现initialize方法，会去调用父类的实现；子类实现了，会覆盖父类的方法；
+在分类重写之后，initialize只会调用最后覆盖的那一个实现
+
+31.
+实例变量是定义在类的结构体中，编译期就已经决定了整个类的内存空间，实例变量的大小也已经决定了
+
+32.
+装载所有可执行文件.o，
+加载所有动态库，符号绑定
+objc的初始化，类的注册，分类注册，检查selector的唯一性
+递归执行所有load方法，创建静态全局变量
+执行appdelegate的didfinshlaunch方法
+

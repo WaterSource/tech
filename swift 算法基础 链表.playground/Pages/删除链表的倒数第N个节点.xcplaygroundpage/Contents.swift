@@ -2,40 +2,8 @@
 
 import Foundation
 
-class ListNode {
-    var val: Int?
-    var next: ListNode?
-    
-    init(_ x: Int) {
-        val = x
-        next = nil
-    }
-}
-
-class ListNodeList {
-    var root: ListNode?
-    var head: ListNode?
-    
-    init(_ x: Int) {
-        let node = ListNode(x)
-        self.root = node
-        self.head = node
-    }
-    
-    func insert(_ x: Int) {
-        let node = ListNode(x)
-        head?.next = node
-        head = node
-    }
-    
-    func printAll() {
-        var node: ListNode? = root
-        while node != nil {
-            print("node", node?.val ?? 0)
-            node = node?.next
-        }
-    }
-}
+// 删除链表的倒数第N个节点
+// 使用两个指针，A指针先走N步，然后AB同时步进直到末尾
 
 func removeNthFormEnd(_ node: ListNode, n: Int) -> ListNode {
     
@@ -54,8 +22,6 @@ func removeNthFormEnd(_ node: ListNode, n: Int) -> ListNode {
             slow = slow!.next
         }
     }
-    
-    print("fast=", fast?.val, "slow=", slow?.val)
     
     slow?.next = slow?.next?.next
     

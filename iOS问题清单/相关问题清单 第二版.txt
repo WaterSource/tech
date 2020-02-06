@@ -1,0 +1,297 @@
+相关问题清单 第二版
+
+1. 简述消息发送机制和转发机制
+
+发送机制，oc是一门动态语言，所有的方法调用都会被runtime转化为msgSend(obj, @selector, arg)方法，向调用方发送消息
+
+转发机制，对象收到消息之后:
+1)【静态方法解析】
+首先在类中的方法缓存中查找方法；
+然后在类的方法列表中查找方法；
+如果在类的方法列表中还找不到，那么就会进入父类的方法列表查找；
+
+2)【动态方法解析】
+可以动态的添加方法接收对应消息；
+失败返回NO；
+
+3)【快速转发(备用接收者)】
+新建对象接收消息；
+失败返回nil/self；
+
+4)【完整消息转发】
+可以重新为方法签名生成新的NSInvocation，生成1个或者多个对象来接收消息，或者丢弃消息；
+没有返回新的方法签名；
+
+5) 如果消息还是没有被处理，报错抛出
+unrecognized selector
+
+2. 对象(和类、元类)的关系
+
+实例对象isa -> 类对象
+类对象isa -> 元类对象
+根类isa -> 根元类对象
+元类对象isa -> 根元类对象
+根元类对象isa -> 根元类对象
+
+类对象父类 -> 父类对象
+父类对象父类 -> 根类对象
+根类对象父类 -> nil
+元类对象父类 -> 父类元类对象
+根类元类对象 -> 根类对象
+
+3. MRC和ARC的区别
+
+OC的内存管理是通过引用计数实现的，引用计数为0的时候释放对象。
+在MRC需要手动实现retain、release、autorelease等方法实现对引用计数的管理；
+在ARC会在编译阶段自动添加对应的retain、release方法管理对象内存；ARC并不一定会使用autorelease；
+
+ARC还额外实现了优化操作:
+会合并对称的引用计数操作，将成对的+1-1置为0；跳过一些可以省略的autorelease情况；
+在方法返回对象的时候，如果紧接着就要被retain，那么autorelease和retain可以一起省略；
+总结就是ARC在栈区的对象不会调用autorelease进入autoreleasepool；
+
+4. autoreleasepool会缓存那些内容
+
+手动添加的情况，在其作用域的变量会加入autoreleasepool；
+非手动添加的情况，调用了autorelease方法的变量会加入当前的pool；
+
+5. autoreleasepool底层数据结构
+
+是由autoreleasepage(单个是4096字节大小)组成的双向链表，保存调用了autorelease的对象的指针；
+
+6. autoreleasepool和runloop的关系
+
+runloop注册了3个observer；
+在准备启动的时候，注册的最高优先级的事件，初始化autoreleasepool；
+在准备休眠的时候，注册优先级最低的事件，释放旧的autoreleasepool，初始化新的autoreleasepool；
+在准备退出的时候，注册优先级最低的事件，释放autoreleasepool；
+
+7. dealloc做了什么
+
+在最后一次release执行后调用dealloc方法，此时还未释放对象的实例变量；
+在子类的dealloc返回之后，父类的dealloc方法自动执行；
+在最后NSObject的dealloc调用的时候
+	释放关联属性
+	清空引用计数表和弱引用表
+	把weak引用指向nil
+
+8. Runloop和线程的关系
+
+主线程的runloop默认启动，子线程的runloop需要手动启动；
+在首次主动获取才会创建runloop对象；
+runloop对象和线程的的对应关系被保存在全局的字典中；
+runloop在线程结束的时候销毁；
+
+9. runloop的作用
+
+在没有事件的时候休眠，有事件的时候处理响应；
+
+10. runloop和mode的关系
+
+runloop某个时刻只能在一个mode下运行，处理当前mode中的事件(source,timer,observer);
+切换mode需要停下当前执行的mode；
+commonmode内的任务可以同步到当前正在执行的mode下；
+
+11. runloop的事件顺序
+
+1) runloop准备启动
+2) 定时器事件(timer)准备处理
+3) 事件源(source0)准备处理
+4) 处理source0
+5) 事件源(source1)，立即处理，回到步骤2
+6) 准备进入休眠
+7) 收到事件准备唤醒runloop
+8) 处理唤醒的事件，回到步骤2
+9) 结束runloop
+
+12. Source的两个版本区别
+
+source0，只传递了对应事件的函数指针，不会主动触发事件，会被标记为待处理，让runloop来处理事件；应用层的事件；
+source1，包含了mach_port和事件的函数指针，可以主动唤醒runloop处理事件；mach_port被用于通过内核和其他线程通信；系统层的事件；
+
+例如触摸事件是由硬件发送event，event先触发source1唤醒runloop，将事件分发给source0，然后由source0来处理事件;
+
+13. 常用多线程的方法(类)
+
+【NSThread】
+控制线程
+
+【NSOperation】
+是GCD的封装，只能使用其子类；
+
+【GCD】
+控制队列
+
+14. GCD有哪些类型的队列
+
+串行、并发队列
+同步、异步执行
+
+15. 简述一下对Block的理解
+
+block是封装函数及其上下文的OC对象；
+本质上是OC对象，存在isa指针，因为在不同的内存分为全局、栈、堆；
+
+继承关系是 NSObject -> NSBlock -> NSConcreteGlobalBlock/StackBlock/MallocBlock
+
+16. 3种block的分别
+
+全局block，没有使用auto变量，会保存在数据段(即储存全局变量的内存空间)，程序结束才会被释放；
+
+栈stack block，访问了auto变量，保存在栈中，执行完毕就释放；
+
+堆malloc block，栈block调用了copy，保存在堆中，引用计数为0时释放；
+
+17. block截获变量原理
+
+因为函数作用域的问题，需要跨函数访问变量，所以需要捕获局部的变量；
+局部临时变量会自动添加auto关键字，向block对象值传递；
+静态变量会向block传递指针；
+全局变量不会被捕获，可以直接访问；
+
+18. mrc/arc下 block有什么区别？
+
+在arc下，编译器会在特定情况下自动把栈上的block进行一次copy操作；
+
+1) 作为函数返回值时
+2) 被强引用时
+3) 被Cocoa系统方法作为参数时
+4) 作为gcd方法参数时
+
+19. __block 的作用
+
+__block修饰的auto变量允许在block内部做修改；
+不能修饰static和全局变量；
+把对应变量转换为对象，传递指针进入block；
+
+20. block怎么产生的循环引用
+
+对象持有block，block内部引用了对象，产生循环引用；
+
+21. 怎么实现KVO
+
+runtime动态添加一个子类，重写被监听的属性的setter方法，重写class方法；
+在setter方法中增加 willChangeValue和didChangeValue方法；
+
+22. 手动触发KVO
+
+按顺序调用 willChangeValue和didChangeValue方法；
+
+23. 怎样避免KVO的crash
+
+全局有字典保存监听者和被监听者的关系；
+1) 监听者释放，监听关系没有解除；给监听者的野指针发送消息，野指针crash；
+2) 被监听者释放，监听关系没有解除；监听者内存释放之后，系统会因为还存在监听关系crash；(测试了一下，没有crash现象)
+3) 多次移除监听关系，报多次移除的错误；
+
+系统为了实现KVO，为NSObject添加了一个名为NSKeyValueObserverRegistration的category，KVO的add和remove的实现都在里面。在移除的时候会判断当前的KVO的key是否已经被移除，如果已经被移除，则主动抛出异常；
+
+24. KVC相关的方法有哪些
+
+valueForKey:
+setValue:forKey:
+valueForKeyPath:
+setValue:forKeyPath:
+
+25. KVC查找变量的顺序
+
+设置值顺序，set<Key>方法， _<key>成员变量，_is<Key>成员变量，<key>成员变量，is<Key>成员变量
+
+读取值顺序，get<Key>方法，<key>成员变量，is<Key>成员变量
+
+如果上面的没找到，会继续查找 
+countOf<Key>方法，objectIn<Key>AtIndex方法，<Key>AtIndex方法 如果这些方法被找到，就会返回一个NSKeyValueArray；
+
+如果上面的还没找到，继续查找(同时查找，需要三个方法都在)
+countOf<Key>, enumeratorOf<Key>, memberOf<Key>
+如果都找到了，就会返回一个NSSet；
+
+26. Category和Extension的区别
+
+Category: 分类，不能设置成员变量
+
+Extension: 扩展，需要有类的源码，实现需要在本类中实现，可以定义私有变量；
+
+27. Category的实现原理
+
+category中的方法、属性、协议数据放在category_t结构体中，在调用分类的时候会同步拷贝到类对象中；
+
+28. Category为什么只能加方法不能加属性
+
+分类是在运行时动态添加到对象的结构体中的，而实例对象的成员变量在编译完成的时候就已经决定好了，不能再额外增加成员变量；
+所以category声明的属性不会自动合成，即不会生成成员变量ivar和setter、getter方法；
+
+29. load、initialize的区别，在Category重写之后的调用顺序
+
+load方法在程序启动的时候就会调用；
+子类不需要调用[super load]；
+在加载每个类的时候，都会按照继承关系，父类-子类-分类的顺序每个类调用一次；
+没有实现的类就不会调用；
+
+initialize是在第一次调用该类的方法的时候调用；
+子类不需要调用[super initialize]；
+方法触发的时候，会按照继承关系先调用父类的方法，在调用子类的方法；
+如果子类没有实现initialize方法，会重复调用父类的方法，父类的实现可能会调用多次；
+如果分类实现了initialize，会覆盖本类的initialize方法，多个分类的实现只会调用最后的一个实现；
+
+30. app的启动过程
+
+1) 加载可执行文件，app中.o文件的集合；
+2) 加载动态链接库，进行符号绑定；
+3) ObjC的初始化处理，类的注册，category的注册，selector的唯一性检查；
+4) 初始化，执行+load方法，创建C++静态全局变量，attribute((constructor))修饰的函数调用；
+5) didFinishLaunchWithOption
+
+31. app启动优化
+
+main()执行前
+减少动态库，可以将最多6个动态库合成一个
+减少load方法
+减少使用C++的静态全局变量
+
+main()执行后
+减少didFinishLaunchWithOption的耗时操作
+
+32. app启动监控
+
+第一种方案，定时抓起主线程上的方法调用堆栈，计算一段时间内各个方法的耗时；Time Profiler就是这个方案；优缺点就是时间间隔的设定会导致方法的缺漏或者本身就影响了方法执行耗时；
+第二种方案，hook objc_msgSend 方法，实现对所有方法的执行耗时统计；
+
+33. runtime关联对象的实现原理
+
+系统全局持有AssociationManager管理维护associationHashMap；
+AssociationHashMap中的键值对为 对象的指针：ObjectAssociationMap;
+ObjectAssociationMap中的键值对为 关联对象的key(可以不实现NSCopying，但要是对象级别)：关联对象
+
+34. 编译过程
+
+预处理 - 词法分析 - 语法分析 - 静态分析 - 生成中间代码和优化 - 汇编 - 链接
+
+35. Bitcode的作用
+
+bitcode是iOS7的特性，输出的是编译后程序的中间表现。包含bitcode的项目会在appstore上完成编译和链接。可以在不提交新版本的情况下，apple会在将来再次优化app的二进制文件。
+
+36. 事件的响应链
+
+系统检测到硬件事件，会生成一个ioevent事件发送给 springboard
+springboard会将事件转发给需要的app进程
+app进程收到之后会放入当前活动的事件队列中 source1事件
+source1事件会唤醒runloop进行事件分发，分发给source0处理事件
+单例的application会将event事件从事件队列取出，发送给当前展示的window
+window会通过hit-test查找本次事件所在的视图，把事件传递给对应的UIResponder视图
+第一响应视图如果不处理该事件，会继续向下传递回到window和application
+如果都不处理，则丢弃事件
+
+37. UI渲染流程
+
+CPU计算出要显示的内容，包括视图的创建、布局计算、图片解码、文本绘制；
+计算完成的内容会传递到GPU进行渲染；
+渲染结果会提交到帧缓冲区(framebuffer)，等待垂直同步信号到来时显示到屏幕上；
+
+38. 离屏渲染有什么问题，什么属性会造成离屏渲染，解决方案
+
+会额外创建帧缓冲区，在上下文切换的时候会产生性能问题;
+
+圆角、阴影、mask、group opacity、blur,iOS9之后设置png图片的imageview可以设置圆角
+
+shouldRasterize

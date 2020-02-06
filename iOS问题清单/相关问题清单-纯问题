@@ -1,0 +1,73 @@
+相关问题清单-纯问题
+
+1. 简述消息发送机制和转发机制
+
+2. 对象(和类、元类)的关系
+
+3. MRC和ARC的区别
+-
+
+4. autoreleasepool会缓存那些内容
+
+5. autoreleasepool的数据结构
+
+6. autoreleasepool和runloop的关系
+
+7. dealloc做了什么
+-
+
+8. runloop和线程的关系
+
+9. runloop的作用
+
+10. runloop的mode有什么用
+
+11. runloop的事件顺序
+
+12. 实现多线程的几种方法
+
+13. GCD的队列有几种类型
+
+14. 如何用GCD同步若干个异步调用
+
+15. 为什么弃用了 dispatch_get_current_queue
+
+16. block原理
+-
+
+17. block截获变量原理
++
+
+18. mrc/arc block的区别
++
+
+19. __block的作用
+
+20. block为什么会产生循环引用
+
+21. 怎么实现kvo
+
+22. 怎么手动触发kvo
+-
+
+23. kvo会造成crash的原因有哪些
+
+24. KVC基本方法
+
+25. KVC查找及设置值的查找顺序
+
+26. Category和Extension的区别
+
+27. Category的实现原理
+++
+
+28. Category为什么只能增加方法不能增加实例变量
+-
+
+29. Category的load方法是是什么时候调用的
+
+30. load、initialize的区别，在Category重写之后的调用顺序
++
+
+31. app的完整启动过程
+-

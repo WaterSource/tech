@@ -11,5 +11,11 @@
         <page name='实现strStr()'/>
         <page name='报数'/>
         <page name='最长公共前缀'/>
+        <page name='中级 - 三数之和'/>
+        <page name='矩阵置零'/>
+        <page name='字谜分组'/>
+        <page name='无重复字符的最长子串'/>
+        <page name='最长回文子串'/>
+        <page name='递增的三元子序列'/>
     </pages>
 </playground>

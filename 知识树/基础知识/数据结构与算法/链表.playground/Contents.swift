@@ -29,10 +29,12 @@ class NodeList {
     func insertNode(_ val: Int?)  {
         let node = ListNode(val)
         self.head?.next = node
+        self.head = node
     }
     
     func insertNode(_ node: ListNode?) {
         self.head?.next = node
+        self.head = node
     }
     
     class func printAll(_ root: ListNode) -> [Int] {
@@ -169,6 +171,7 @@ func getIntersectionNode(_ headA: ListNode?, _ headB: ListNode?) -> ListNode? {
     var pa = headA
     var pb = headB
     
+    // 死循环？
     while pa !== pb {
         pa = pa != nil ? pa?.next : headB
         pb = pb != nil ? pb?.next : headA
@@ -235,13 +238,17 @@ let list = NodeList(1)
 list.insertNode(2)
 list.insertNode(3)
 list.insertNode(4)
-list.insertNode(5)
-list.insertNode(6)
-list.insertNode(7)
-list.insertNode(8)
+//list.insertNode(5)
+//list.insertNode(6)
+//list.insertNode(7)
+//list.insertNode(8)
 
 //list.root
+let list2 = NodeList(5)
+list2.insertNode(6)
+list2.insertNode(7)
+list2.insertNode(8)
 
+getIntersectionNode(list.root, list2.root)
 
-
-NodeList.printAll(list.root!)
+//NodeList.printAll(list.root!)

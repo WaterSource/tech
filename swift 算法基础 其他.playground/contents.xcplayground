@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios'>
+    <pages>
+        <page name='位1的个数'/>
+        <page name='汉明距离'/>
+        <page name='颠倒二进制位'/>
+        <page name='帕斯卡三角形'/>
+        <page name='有效的括号'/>
+        <page name='缺失数字'/>
+        <page name='快速找到重复的数'/>
+    </pages>
+</playground>

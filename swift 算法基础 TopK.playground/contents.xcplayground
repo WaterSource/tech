@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios'>
+    <pages>
+        <page name='大小最大的K重复数字重复输出'/>
+        <page name='出现频率最大的K重复数字不重复输出'/>
+    </pages>
+</playground>

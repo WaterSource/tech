@@ -2,6 +2,53 @@
 
 应用开始运行之后，不做任何操作，应用就像静止了一样，不会有自发的产生动作；如果用户做了操作，就会有对应的响应事件发生，感觉就像是应用一直处于随时待命的状态。这就是runloop的效果。
 
+### 事件处理机制与图像渲染过程
+
+Runloop主要是处理6类事件:
+
+* Observer事件，runloop中状态变化时进行通知
+
+```
+微信通过这个事件监控卡顿；
+记录下最近一次main runloop活动时间，在另一个监控线程上用定时器检测当前时间距离最后一次活动时间是否过久来判断主线程中的处理逻辑耗时和主线程卡顿。
+```
+
+* Block事件
+
+```
+非延迟的performSelector立即调用，dispatch_after立即调用，block回调。
+```
+
+* Main_Dispatch_Queue事件
+
+```
+GCD中dispatch到main_queue的block，会被dispatch到main_loop执行。
+```
+
+* Timer事件
+
+```
+延迟的performSelector，延迟的dispatch_after，timer事件。
+```
+
+* Source0事件
+
+```
+处理UIEvent、CFSocket这类事件。需要手动触发。
+Source0是需要唤醒runloop及时响应执行的，如果runloop此时在休眠等待 mach_msg事件，那么就会通过Source1事件来唤醒runloop执行。
+```
+```
+触摸事件其实是Source1接收系统事件后，
+在回调 __IOHIDEventSystemClientQueueCallback() 内触发了Source0，
+Source0再触发 __UIApplicationHandleEventQueue()。
+```
+
+* Source1事件
+
+```
+处理系统内核的mach_msg事件。
+```
+
 ### Runloop和线程
 
 主线程的runloop默认启动，子线程的runloop需要手动启动；
@@ -41,12 +88,18 @@ Runloop事件的来源主要就是输入源(Input Source)和定时源(Timer Sour
 
 Runloop在执行到特定时候会触发的事件
 
-- 准备开启runloop
-- 何时处理定时器
-- 何时处理输入源
-- 何时进入休眠状态
-- 何时将要被唤醒(在执行唤醒事件之前)
+- 通知observer，准备开启runloop
+- 通知observer，准备处理定时器 Timer
+- 通知observer，准备处理非端口输入源(source0)
+- 处理source0事件
+- 如果有端口输入源(source1)事件，去到第9步
+- 通知observer，准备进入休眠状态
+- 休眠
+- 通知observer，即将要被唤醒(在执行唤醒事件之前)
+- 处理唤醒的事件，回到步骤2 【Timer、source1】
 - 结束runloop
+
+![](https://tva1.sinaimg.cn/large/006y8mN6gy1g9aa06jvrtj30p00j8dkh.jpg)
 
 #### Runloop Mode
 

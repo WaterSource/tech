@@ -8,5 +8,8 @@
         <page name='合并两个有序链表'/>
         <page name='回文链表'/>
         <page name='环形链表'/>
+        <page name='中级 - 两数相加'/>
+        <page name='奇偶链表'/>
+        <page name='相交链表'/>
     </pages>
 </playground>

@@ -1,0 +1,78 @@
+相关问题清单 第二版 纯题目
+
+1. 简述消息发送机制和转发机制
+
+2. 对象(和类、元类)的关系
+
+3. MRC和ARC的区别
+
+4. autoreleasepool会缓存哪些内容
+
+5. autoreleasepool的底层数据结构
+
+6. autoreleasepool和runloop的关系
+
+7. dealloc做了什么
+
+8. runloop和线程的关系
+
+9. runloop的作用
+
+10. runloop和mode的关系
+
+11. runloop的事件顺序
+
+12. runloop中Source的区别
+
+13. 常用多线程的方法(类)
+
+14. GCD有哪些类型的队列
+
+15. 简述对block的理解
+
+16. 3种block类型的分别
+
+17. block截获变量原理
+
+18. mrc/arc下，block有什么区别
+
+19. __block的作用
+
+20. block怎么产生的循环引用
+
+21. 怎么实现KVO
+
+22. 怎么手动触发KVO
+
+23. 怎样避免KVO的crash
+
+24. KVC相关的方法有哪些
+
+25. KVC查找变量的顺序
+
+26. Category和Extension的区别
+
+27. Category实现原理
+
+28. Category为什么只能加方法，不能加属性
+
+29. load、initialize的区别；在category重写之后的调用顺序；
+
+30. app启动过程
+
+31. app启动优化
+
+32. app启动监控
+
+33. runtime关联对象的实现原理
+
+34. 编译过程
+
+35. bitcode的作用
+
+36. 事件响应链
+
+37. UI渲染流程
+
+38. 设置什么属性会造成离屏渲染
+

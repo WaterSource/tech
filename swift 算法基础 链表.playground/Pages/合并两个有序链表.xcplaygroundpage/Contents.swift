@@ -2,48 +2,7 @@
 
 import Foundation
 
-class ListNode {
-    var val: Int?
-    var next: ListNode?
-    
-    init(_ x: Int) {
-        val = x
-        next = nil
-    }
-    
-    func printList() {
-        var tmp: ListNode? = self
-        while tmp != nil {
-            print("node", tmp!.val!)
-            tmp = tmp?.next
-        }
-    }
-}
-
-class ListNodeList {
-    var root: ListNode?
-    var head: ListNode?
-    
-    init(_ x: Int) {
-        let node = ListNode(x)
-        self.root = node
-        self.head = node
-    }
-    
-    func insert(_ x: Int) {
-        let node = ListNode(x)
-        head?.next = node
-        head = node
-    }
-    
-    func printAll() {
-        var node: ListNode? = root
-        while node != nil {
-            print("node", node?.val ?? 0)
-            node = node?.next
-        }
-    }
-}
+// 合并两个有序链表
 
 func mergeTwoLists(_ list1: ListNode, _ list2: ListNode) -> ListNode {
     let root = ListNode(0)

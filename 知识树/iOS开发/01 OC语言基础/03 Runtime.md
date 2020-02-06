@@ -167,3 +167,43 @@ MJExtension
 核心方法: 在NSObject的分类中添加方法。
 
 [参考链接](https://www.jianshu.com/p/6ebda3cd8052)
+
+---
+
+### 关联对象的实现原理
+
+#### 使用场景
+
+1. 为现有的类添加私有变量
+2. 为现有的类添加公有属性
+3. 为KVO创建关联的观察者
+
+```
+void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy);
+
+id objc_getAssociatedObject(id object, const void *key);
+
+void objc_removeAssociatedObjects(id object);
+```
+
+但是一般不直接使用remove方法，调用会导致所有关联属性被移除。
+
+#### 释放的时机
+
+关联对象有五种关联策略，其中部分的差异点在于是否具有原子性
+
+* `objc_association_assign`
+* `objc_association_retain_nonatomic`
+* `objc_association_copy_nonatomic`
+* `objc_association_retain`
+* `objc_association_copy`
+
+正常的释放时机，是在对象被释放的时候调用的，dealloc会触发`_object_remove_assocations`函数移除所有关联对象；
+
+对于弱引用的关联对象，可能会在初始化之后就会被释放，但是关联的对象依旧有值，会保存原对象的地址。后面再调用的时候会造成crash。
+
+#### AssociationsManager
+
+* 系统全局存在单例`AssociationsManager`管理并维护`AssociationsHashMap`；
+* 对象的指针及其对应的`ObjectAssociationMap`以键值对的形式存储于`AssociationsHashMap`；每一个对象有一个标记位`has_assoc`指示是否存在关联对象；
+* 关联对象`ObjcAssociation`以键值对的形式存储于`ObjectAssociationMap`(键可以是自定义的值，应该可以理解为可以不实现`NSCopying`)

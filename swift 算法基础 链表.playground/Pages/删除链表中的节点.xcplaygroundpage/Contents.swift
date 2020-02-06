@@ -2,40 +2,8 @@
 
 import Foundation
 
-class ListNode {
-    var val: Int?
-    var next: ListNode?
-    
-    init(_ x: Int) {
-        val = x
-        next = nil
-    }
-}
-
-class ListNodeList {
-    var root: ListNode?
-    var head: ListNode?
-    
-    init(_ x: Int) {
-        let node = ListNode(x)
-        self.root = node
-        self.head = node
-    }
-    
-    func insert(_ x: Int) {
-        let node = ListNode(x)
-        head?.next = node
-        head = node
-    }
-    
-    func printAll() {
-        var node: ListNode? = root
-        while node != nil {
-            print("node", node?.val ?? 0)
-            node = node?.next
-        }
-    }
-}
+// 删除链表节点
+// 注意前置节点和后续节点的连接
 
 func deleteNode(_ node: ListNode) {
     let next = node.next

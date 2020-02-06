@@ -1,0 +1,106 @@
+基础题扩展 1
+
+1. atomic和nonatomic的理解
+
+是修饰属性的原子性的关键字
+
+atomic是原子性操作，通过加锁保证本次读写操作的完整性，但是会带来性能损耗，也没办法保证在多线程并发的情况下保证读写顺序正常
+
+nonatomic是非原子性操作，读写操作不加锁限制
+
+2. 被weak修饰的对象在释放的时候发生什么？如何实现的？
+
+系统全局保存有weak对象的字典，保存着所有指向该对象的指针，在释放的时候会统一将指针置nil；
+
+-3. sideTable
+sidetables是全局的hash【数组】，存储【64】个sidetable；
+sidetables的hash键值是一个对象obj的address；
+一个obj对应一个SideTable；一个SideTable对应多个obj；
+
+SideTable中有两个成员
+对象引用计数相关的hashmap，key是obj的地址，value是obj的引用计数；
+对象弱引用相关的weak_table，key是obj的地址，value是obj的指针；
+
+4. block用什么修饰？可以用strong么？
+用copy修饰，arc也可以用strong；
+在arc下系统做了优化，被强引用的block会自动从栈区copy到堆区；
+
+5. block为什么能捕获外界变量？
+block是封装了上下文的OC对象，相当于匿名函数；
+内部使用的参数都会以引用的方式传入block，
+临时变量会自动补上auto关键字，以值引用的方式传递进入block
+静态临时变量会以指针形式传递进入block
+全局变量和全局静态变量可以直接在block中使用
+
+6. __block做了什么事
+将修饰的变量封装为对象，可以在block中修改
+
+-7. 事件的传递链和响应链的理解
+系统收到触摸事件后会封装成UIEvent对象，
+从appdelegate开始传递，通过hit-test，从window-controller-view查找最顶层的控件，
+查找到控件之后检查是否可以响应事件，如果不能响应就传递到上层，都不能响应就丢弃；
+
+系统检测到硬件事件，转发事件到SpringBoard，转发事件到app进程，放入当前活动的Application的事件队列，唤醒当前runloop，调用UIApplicationHandleEventQueue开始事件分发，发送到UIWindow，使用hit-test查找本次事件所在的视图；
+视图不处理事件会向上传递，直到UIApplication，事件不处理就会丢弃；
+
+8. KVC和KVO的理解
+kvc是通过
+setvalue:forkey:
+setvalue:forKeypath:
+直接修改对象成员变量的方法
+
+kvo是通过runtime生成一个被监听对象的子类，重写对应属性的setter方法和class方法，可以kvo的方法监听到对应属性的修改；
+
+-9. kvc的key不存在会怎样？
+- (nullable id)valueForUndefinedKey:(NSString *)key;
+默认抛出异常，重写可以重新定义;
+
+10. runloop的作用是什么，内部工作机制
+
+11. autoreleasepool是怎么实现的
+autoreleasepage 4096字节大小，双向链表
+
+-12. 函数响应式(FRP)的理解，需要延伸RxSwift、RAC
+响应式编程 函数式编程
+数据流
+
+-13. Instrument
+性能检测工具
+
+14. 什么是isa，isa的作用是什么
+isa指针，对象的isa指向类，类的isa指向元类
+
+15. 实例对象的isa指向什么？类对象指向什么？元类isa指向什么？
+元类isa指向根类的元类
+
+16. objc中类方法和实例方法有什么本质区别和联系
+实例方法在类结构的方法列表中
+类方法在元类结构的方法列表中
+
+17. _objc_msgForward的作用
+会不检查缓存和方法列表，直接进入消息转发流程
+
+18. HTTP的缺陷是什么
+通信使用明文，内容可能会被窃听
+不验证通信方的身份，因此可能会被伪装
+无法证明报文的完整性，可能已经被篡改
+
+19. 三次握手、四次挥手的原理，为什么
+
+20. socket和http连接区别
+
+21. 什么时候POP网路，有了 Alamofire 封装网络 URLSession为什么还要用Moya ？
+
+面向协议编程的网络能够大大降低耦合度！
+网络层下沉，业务层上浮。中间利用  POP网络 的 Moya 隔开。
+如果你的项目是  RxSwift  函数响应式的也没有关系！因为有  RxMoya 
+
+22. 如何实现 dispatch_once
+
+23. 读写锁原理
+
+24. 死锁的原因，如何避免
+
+25. 看过哪些第三方框架的源码，它们是怎么设计的？
+
+这个题目就看你个人的感触，考量你平时的功底！ 大家可以针对性一些常见的框架： RxSwift 、 Alamofire 、 Moya 、 AFNetworing 、 YYKit .... 掌握会用的同时，必须要掌握底层的核心思想！

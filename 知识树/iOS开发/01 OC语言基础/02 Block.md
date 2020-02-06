@@ -1,8 +1,8 @@
 ## Block
 
-### Block语法
+Block也是一种OC对象，内部存在一个`isa`指针；可以用于赋值、参数传递、放入`collection`中；
 
-Block也是一种OC对象，可以用于赋值、参数传递、放入`collection`中；
+### Block语法
 
 `Return_type (^block_name)(parameters)`
 
@@ -44,11 +44,41 @@ TypeName blockName = ^returnType(parameters){...};
 3. `局部静态变量`会以`指针形式`截获
 4. `全局变量`和`静态全局变量`，不截获
 
+#### auto变量
+
+auto自动变量，离开作用域就销毁，局部变量前面自动添加auto关键字。自动变量会捕获到block内部，block内部会增加一个参数来存储变量的值。auto只存在于局部变量中，访问方式为值传递；
+
+#### static变量
+
+static修饰的变量是指针传递，同样会被block捕获；
+
+```
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        auto int a = 10;
+        static int b = 11;
+        void(^block)(void) = ^{
+            NSLog(@"hello, a = %d, b = %d", a,b);
+        };
+        a = 1;
+        b = 2;
+        block();
+    }
+    return 0;
+}
+```
+
+#### 全局变量
+
+不会被block捕获，可以直接调用；
+
 #### __block
 
 被`__block`修饰的变量会被包装成一个对象;
 
 ### Block内存管理
+
+![](https://tva1.sinaimg.cn/large/006y8mN6gy1g94kg49qjkj30ko0frdi2.jpg)
 
 #### _NSConcreteGlobalBlock
 

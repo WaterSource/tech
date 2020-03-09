@@ -1,0 +1,352 @@
+相关问题清单 第三版
+
+1. 简述消息发送机制和转发机制
+
+发送机制: 在OC中所有的方法调用都会在编译期通过runtime转换为 objc_msgSend(id self, SEL _cmd, ...)，向对象发送消息。其中隐藏了参数self，和方法本身SEL。
+
+转发机制: 
+0) 对象收到消息先通过实例的isa指针找到对应的类对象，类方法会通过类对象的isa指针找到对应的元类对象；
+1) 先查找对应的方法缓存
+2) 自己的方法列表
+3) 父类的方法列表
+4) 进入动态方法解析，允许调用者动态添加方法接收消息。返回NO进入下一步
+5) 快速消息转发(备用接收者)，允许调用者将消息转发给指定对象。返回nil/self进入下一步
+6) 完整消息转发，允许调用者对消息重签名，经过重签名的消息会封装为NSInvocation，可以转发给若干个其他对象，或者直接丢弃。签名阶段没有返回新的签名则进入下一步
+7) unrecognized selector，默认抛出异常
+
+2. objc_msgForward函数有什么用
+
+在方法列表中找不到方法时，系统调用objc_msgForward进入消息转发机制；
+直接调用会避开方法查找，直接开始消息转发；
+
+3. BAD_ACCESS是什么情况出现的
+
+向野指针发送消息
+
+4. 实例对象、类对象、元类对象的关系
+
+实例对象的isa指针指向类对象
+类对象的isa指针指向元类对象
+元类对象的isa指针指向根元类对象
+根元类对象的isa指针指向自己
+
+类对象的父类对象是父类对象，最后为根类对象NSObject，根类对象的父类是nil
+元类对象的父类对象是父类元类对象，最后为根类元类对象，最后为NSObject
+
+5. #import,#include,@class的区别
+
+@class只声明了类名，不能使用类中的属性及方法；
+@class还可以用于解决循环依赖关系；
+#include和#import都用于引入类，可以使用类的属性和方法；
+#import解决了重复引用的问题；
+
+6. 属性修饰词的作用
+
+读写特性: readwrite, readonly
+原子性操作特性: nonatomic, atomic
+内存管理特性: assign, weak, retain, strong, copy
+读写方法: setter, getter
+兼容swift: nullable, nonnull
+
+7. 什么是自动合成，什么情况下属性的自动合成会失效
+
+自动合成是在编译期，系统根据属性定义，生成实例变量和setter和getter方法；
+@property = ivar + setter + getter
+
+1) 同时存在带下划线和不带下划线的变量;
+2) 使用了@dynamic修饰变量，代表setter和getter方法由用户自行实现;
+3) 在protocol和category定义的属性；
+4) 同时重写了setter和getter方法；或者重写了只读属性的getter方法；
+5) 子类重写的属性；
+6) init开头的属性;
+
+8. 如何让自定义的类可以使用copy关键字修饰
+
+实现NSCopying，NSMutableCopying协议；
+实现copyWithZone方法；
+
+9. Category和Extension的区别
+
+Category分类，不能设置成员变量；
+Extension扩展，需要有类的源码，实现需要在本类中实现，可以定义私有变量；
+
+10. Category的实现原理
+
+Category中的方法、属性、协议等数据放在了category_t结构体中，在调用分类的时候会同步拷贝到类对象中；
+
+11. Category为什么只能加方法不能加属性
+
+对象的成员变量和实例所占的内存大小在编译结束的时候就已经确定了，不能再额外增加成员变量；在Category声明的属性不会自动合成，只能通过关联属性增加属性；
+
+12. load、initialize方法的区别，在Category重写后的调用顺序
+
+load方法是在程序启动的时候就会调用；不需要调用[super load]；
+在objc初始化之后，所有类文件都注册完成之后，会按照继承关系，父类-子类-分类的顺序每个类调用一次；
+没有实现的类就不会调用；
+
+initialize方法在类的方法第一次被触发的时候调用；不需要调用[super initialize]；
+方法触发的时候会按照继承关系，父类-子类的顺序调用；
+如果子类没有实现initialize方法，会重复调用父类方法；
+如果分类实现了initialize方法，会覆盖本类的实现，多个分类实现只会调用最后一个实现；
+
+13. Dealloc方法做了什么
+
+对象最后一次release执行之后会调用dealloc方法，此时对象的实例变量还未释放；
+子类的dealloc返回之后，父类的dealloc自动执行；
+在最后NSObject的dealloc执行的时候:
+1) 释放关联属性
+2) 清空引用计数表
+3) 清空弱引用表，把指向自己的weak引用指向nil
+
+14. 项目的编译过程
+
+预处理 - 宏替换，头文件引入，处理条件编译指令
+词法分析 - 分隔为单个字符或者单词，记录位置
+语法分析 - 解析为语法树，记录位置
+静态分析 - 错误检查，类型检查
+中间代码生成和优化 - 针对全局代码优化，尾递归优化，输出汇编代码
+汇编 - 将上一步生成的汇编代码转换为机器代码，生成.o目标文件
+链接 - 将目标文件和静态库链接起来生成可执行文件
+
+15. Bitcode是什么，有什么用
+
+Bitcode是iOS7的特性，会将编译后程序的中间状态输出出来，包含bitcode的项目会在App Store上完成编译和链接，可以在并不提交新版本的情况下，直接对二进制文件优化；
+
+16. app的启动过程
+
+1) 加载可执行文件，app中.o文件的集合；
+2) 加载动态链接库，进行符号绑定；
+3) ObjC runtime 的的初始化处理(包括类、分类的注册，selector的唯一性检查等)；
+4) 初始化，执行+load方法，创建C++静态全局变量，执行attribute(constructor)修饰的方法；
+5) didFinishLaunchWithOption
+
+17. app启动怎么优化
+
+最佳的启动时间是400ms，主要处理main函数之后的步骤；
+1) didFinishlaunch中的耗时操作，异步子队列处理；
+2) 页面结构的初始化，window，navigation，tabbbar，非必要的页面缓后生成；
+3) 数据获取(local DB / network)，异步处理，主线程刷新UI
+4) main函数之前，减少动态库数量，减少C++全局静态变量，减少load方法；
+
+18. app启动耗时监控可以怎么做
+
+1) 系统环境变量可以输出整体的启动耗时
+2) fishhook objc_msgSend方法，实现所有方法调用的耗时
+3) 新建监察线程，定时检查线程上的方法调用栈，计算方法的调用耗时
+
+19. 弱引用的实现原理
+
+runtime全局持有一个hash表，key是原始对象的内存地址，value是所有弱引用的内存地址数组；对象释放的时候会移除该键值对；
+
+20. IBOutlet连线出来的视图为什么可以被设置为weak
+
+连线的视图已经被xib上的view通过subviews强引用了，对于VC来说只是使用连线的视图可以不拥有它，所以是weak；
+被设置为strong也可以，并不会造成循环引用；
+
+21. runtime关联对象的实现原理
+
+runtime全局持有一个 AssociationsManager 管理维护 AssociationsHashMap，map管理所有的对象，存在标记位 has_assoc标记是否存在关联对象；
+hashmap中以键值对存储 key是对象的指针(被关联对象)，value是 objectAssociationMap;
+objectAssociationMap 通过键值对存储关联对象，key是关联属性设置的key，可以是自定义的值不需要实现NSCopying，value是关联属性的值；
+
+22. MRC和ARC的区别
+
+OC通过引用计数管理内存释放，对象引用计数为0的时候就释放对象；
+mrc是手动管理引用计数，需要调用者手动调用retain、release、autorelease等方法；
+arc是自动管理引用计数，会在编译期的中间代码及优化过程中自动添加retain、release、autorelease等方法；
+arc针对引用计数有额外的优化:
+1) 连续的+1-1操作会被合并优化，在栈区的对象不会进入autorelease pool；
+2) 作为函数返回值时，如果紧接着一个release调用，会与函数内的autorelease合并优化；
+
+23. AutoReleasePool会缓存那些内容
+
+手动创建pool的情况下，在pool作用域内的变量会被缓存；
+非手动情况下，调用了autorelease方法的变量会加入autoreleasepool；
+
+24. AutoReleasePool的底层数据结构
+
+是由autoreleasepoolpage组成的双向链表，单个page固定大小为4kb，保存着调用了autorelease方法的对象的指针；
+
+25. AutoReleasePool和Runloop的关系
+
+系统在runloop中注册了3个observer
+1) 在runloop即将启动的时候，注册最高优先级的observer，初始化pool；
+2) 在runloop即将休眠的时候，注册优先级最低的observer，释放旧的pool，初始化新的pool；
+3) 在runloop准备退出的时候，注册优先级最低的observer，释放旧的pool；
+
+26. Runloop的作用
+
+保证线程不被释放，在有任务事件的时候唤醒线程执行，没有任务的时候使得线程休眠；
+
+27. Runloop和mode的关系
+
+runloop在某一时刻只能运行在一个mode下，处理当前mode中的事件(timer,source,observer);
+切换mode需要停下当前执行的mode；
+commonmode内的任务可以同步到当前正在执行的mode下；
+
+28. Runloop的Observer事件顺序
+
+1) 通知 observer runloop被触发
+2) 如果有timers事件，通知observer
+3) 如果有source0事件，通知observer
+4）触发所有准备完毕的source0事件
+5) 如果当前是主线程runloop，主线程有任务执行，跳到第9步
+6) 通知Observer runloop即将进入休眠
+7) mach进入休眠和监听状态
+8) 通知Observer，runloop被唤醒
+9) 如果runloop是被唤醒，处理唤醒的事件
+9.1) 如果用户定义的timer被触发，处理事件
+9.2) 如果是dispatchport，处理主线程
+9.3) 如果是source1被触发，处理事件
+10) 继续回到步骤2循环，或者通知Observer runloop即将退出
+
+29. Runloop怎么实现休眠状态的唤醒
+
+有三个条件可以唤醒runloop
+1) 通过source1进行唤醒
+2) timer的事件回调
+3) 外部手动唤醒
+
+30. Runloop中两种Source事件的区别
+
+Source0只包含了一个回调，不能主动触发事件，需要先被标记为待处理，才能后续处理事件；理解为应用内的事件处理；
+Source1包含了mach_port和一个回调，可以主动唤醒runloop；理解为系统层的事件分发处理；
+
+31. Runloop和线程的关系
+
+主线程的runloop默认启动，子线程的runloop需要手动唤醒；
+runloop和线程的对应关系被保存在全局的字典中；
+线程结束的时候runloop被销毁；
+
+32. 完整的事件响应链
+
+系统检测到硬件事件，会生成一个IOEvent事件发送给Springboard；
+Springboard分发事件给需要的app进程；
+app进程收到之后会放入当前活动的事件队列中，并且触发一个source1事件；
+source1事件唤醒runloop，runloop会分发事件触发source0事件；
+source0事件会将Event事件从事件队列中取出，发送给当前正在展示的window；
+window会通过hit-test查找本次事件所在的最顶层视图，把事件传递给第一响应的UIResponder视图控件；(hitTest:withEvent:)
+第一响应视图如果不处理该事件，会向下传递，知道回到window和application，如果都不能处理该事件，则事件被丢弃；
+
+33. 大概的UI渲染流程
+
+CPU计算出要显示的内容，包括视图的创建、布局计算、图片解码、文本绘制；
+计算完成的内容会传递到GPU进行渲染；
+渲染结果会提交到帧缓冲区(framebuffer)，等待垂直同步信号(vSync)到来时显示到屏幕上;
+
+34. 离屏渲染会产生什么问题，什么属性会造成离屏渲染
+
+离屏渲染会创建额外的帧缓冲区，在进行上下文切换的时候会消耗大量性能；
+圆角、阴影、mask、group opacity、blur；
+其中iOS9以后，设置为png图片的UIImageView可以设置圆角不产生离屏渲染；
+
+35. 性能最好的圆角方案
+
+1) 重绘图片，对图片完成圆角裁剪；
+2) shapeLayer
+3) layer.corner
+
+36. 常用的多线程方法或者类，分别是怎样控制线程
+
+1) NSThread，控制线程
+2) GCD，控制队列
+3) NSOperation，对GCD的封装，只能使用子类
+
+37. GCD的队列有什么类型，任务可以怎么执行
+
+1) serial，串行队列
+2) concurrent，并发队列
+3) async，异步执行
+4) sync，同步执行
+
+38. GCD的任务如何取消
+
+1) NSOperation，本身有cancel方法
+2) 通过创建 dispatch_queue_t 对象，调用 dispatch_block_cancel() 方法
+
+39. Block是什么
+
+block是封装函数及其上下文的OC对象；
+
+40. Block有几种，内存怎么管理
+
+因为存在不同的内存空间，分为全局、栈、堆3种类型；
+全局block，内部没有使用局部临时变量，会保存在内存的数据段，程序结束时才会释放；
+栈block，内部引用了局部临时变量，会保存在内存的栈区，执行完毕就会被释放；
+堆block，栈block调用copy方法，会保存在堆区，引用计数为0的时候会被释放；
+
+41. Block截获变量的原因，不同类型的变量分别怎么截获
+
+因为函数作用域的关系，block内部的变量使用是跨函数作用域的，所以block需要对上下文的变量做截获处理；
+局部临时变量会自动添加 auto 关键字，会包括所有权修饰符向block做值传递；
+局部静态变量会以指针的形式被截获；
+全局变量，静态全局变量可以直接访问，不用截获；
+
+42. ARC下对Block做了什么优化
+
+在ARC下，编译器会在以下几种场景自动把栈区的block调用一次copy，转移到堆区
+1) 作为函数的返回值
+2) 被强引用
+3) 作为cocoa 系统动画接口的参数时
+4) 作为gcd的参数时
+
+43. __block关键字的作用
+
+__block修饰的auto变量允许在block内部做修改；
+会把对应变量转换为对象，传递指针进入block；
+不能修饰 静态的变量 或者 全局变量；
+
+44. Block怎么产生的循环引用，如何解除循环引用
+
+block内部引用了对象，对象强引用了block，造成循环引用；
+__weak修饰对象，在block内强制将对象置空；
+
+45. 系统KVO的实现原理
+
+运行时动态增加一个类 NSKVONotifying_A，继承自被观察的类；
+重写观察属性的setter方法，增加 willChangeValue didChangeValue方法的调用，触发observer；
+重写class方法，返回原本的类；
+
+46. 怎么触发KVO的Crash
+
+1) 监听者被释放了，没有解除监听关系，会向监听者的野指针发送消息，野指针crash
+2) 多次解除监听关系，会报多次移除的错误
+
+47. KVC查找变量的顺序
+
+setValue:forKey(Path):
+1) setKey:
+2) _key
+3）_isKey
+4) key
+5) isKey
+
+valueForKey(Path):
+1) getKey:
+2) key
+3) isKey
+4) countOfKey: (objectInKeyAtIndex: keyAtIndex: 二选一实现) -> 返回NSKeyValueArray
+5) countOfKey: enumeratorOfKey: memberOfKey: -> 返回NSSet
+6) _key, _isKey, key, isKey
+
+48. 静态库、动态库的区别
+
+在创建工程的时候可以选择创建类型，在buildsetting也可以切换类型；
+静态库会将库中所有的数据整合为.a文件，编译后的执行不再需要外部函数库的支持；
+最终会和源代码一起打成一个二进制文件，
+因为没有命名空间，所以可能会出现同名类的重复定义，同名全局变量或函数的重复定义；
+
+动态库会单独放在framework文件夹中，存在独立的bundle空间；
+
+49. 组件遇到问题的处理流程
+
+1) 优先项目自查，检查日志，确定问题范围
+2) 如果是组件的问题，将场景加入到组件demo
+3) 如果是项目调用导致的，增加容错机制
+4) 更新文档
+
+50. 多路复用是什么，http2.0和http1.x的多路复用有什么区别
+
+多路复用是指一次tcp连接可以有多个请求共享；
+1.x的多路复用需要等待上一个请求的返回才能发起新的请求；
+2.0的多路复用不需要等待，每个请求有对应的id，可以并发请求；

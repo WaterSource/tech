@@ -3,6 +3,10 @@
 import Foundation
 
 // topK
+/*
+ 最好时间复杂度 O(N)，最坏时间复杂度 O(N)
+ */
+
 func topK(_ list: [Int], _ k: Int) -> [Int] {
     guard list.count > k else {
         return list

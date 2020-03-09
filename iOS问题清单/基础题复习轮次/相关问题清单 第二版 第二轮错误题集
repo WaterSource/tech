@@ -1,0 +1,127 @@
+相关问题清单 第二版 第二轮错误题集
+
+1. 消息发送机制 消息转发机制
+OC是一门动态语言，所有的方法调用在运行时都会通过runtime转换为发送消息
+实例对象收到消息之后，会通过isa指针查找类对象
+类对象收到消息之后，会通过isa指针查找元类对象
+
+1)
+首先会在类对象的方法缓存中查找方法
+方法缓存中没有，在方法列表查找
+方法列表中没有，在父类方法列表查找
+2)动态方法解析
+允许调用者通过runtime动态添加方法接收消息
+返回NO失败
+3)快速消息转发(备用接收者)
+允许调用者将消息转发给其他对象
+返回nil/self失败
+4)完整消息转发
+将原消息重新签名生成NSInvocation，允许调用者将消息转发给若干个其他对象，或者选择丢弃
+签名阶段没有返回新的方法签名则失败
+5)does not recognizeds
+默认返回异常
+
+5. autoreleasepool的底层数据结构
+由固定大小4KB的autoreleasepoolpage组成的双向链表
+page中链表保存对象的指针
+
+7. dealloc做了什么
+在对象的最后一次release执行之后调用dealloc方法，子类的dealloc返回之后，父类的dealloc方法自动执行。在最后的根类的dealloc方法执行时:
+1)释放关联属性
+2)清空引用计数表和弱引用表
+3)weak引用指向nil
+
+8. runloop和线程的关系
+主线程的runloop默认初始化，子线程的runloop需要手动初始化；
+在线程主动访问runloop就可以初始化runloop；
+线程和runloop的对应关系保存在全局的字典中；
+runloop在线程结束的时候销毁；
+
+10. runloop和mode的关系
+runloop在某个时刻只能运行在一个mode，处理当前mode下的事件；
+切换mode需要停下当前执行的mode；
+commonmode内的任务可以同步到当前正在执行的mode下；
+
+11. runloop的observer事件顺序
+1)准备启动runloop
+2)准备处理timer事件
+3)将要处理source0事件
+4)处理source0事件
+5)如果有source1事件，立即处理，回到步骤2
+6)线程即将休眠
+7)休眠等待唤醒 (source0,timer,外部手动唤醒)
+8)即将被唤醒
+9)处理唤醒事件，回到步骤2 (timer,source1)
+10)即将退出runloop
+
+12. source的两个版本区别
+source0是应用内的事件，分两步执行；
+source1是系统层事件，可以唤醒runloop；
+
+18. arc下block做了什么优化
+在特定情况下会将栈上的block调用copy方法转移到堆区
+1)作为函数返回值
+2)被强引用
+3)作为动画api的参数
+4)作为gcd api的参数
+
+19. __block 的作用
+被修饰的auto变量允许在block内部做修改
+不能修饰静态变量和全局变量
+会把对应的变量转换为对象，传递指针进入block
+
+22. 手动触发kvo的方法
+willChangeValue
+didChangeValue
+
+25. KVC查找变量的顺序
+设置值的时候: setKey, _key, _isKey, key, isKey
+读取值的时候: getKey, key, isKey;
+countOfKey, objectInKeyAtIndex 或者 keyAtIndexes, 返回NSArray;
+countOfKey, enumeratorOfKey, memberOfKey, 返回NSSet;
+_key, _isKey, key, isKey;
+valueForUndefinedKey: ;
+
+28. Category为什么只能加方法不能加属性
+分类是在运行时动态添加到对象的结构体中的，而实例对象的成员变量在编译完成的时候就已经决定了实例的大小，不能再额外增加成员变量；
+所以category声明的属性不会自动合成，不会生成成员变量ivar和setter、getter方法；
+
+31. app启动优化
+main()之前，减少动态库，减少load方法，减少C++静态全局变量
+main()之后，减少耗时操作，耗时操作移动到子线程
+
+33. runtime关联对象的实现原理
+系统全局持有associationmanager管理维护associationhashmap；
+associationhashmap中的键值对为 对象的指针 - objectAssociationMap;
+ObjectAssociationMap中的键值对为 关联对象的key - 关联对象
+
+34. 编译过程
+预处理
+词法分析
+语法分析
+静态分析
+生成中间代码和优化
+汇编
+链接
+
+35. bitcode的作用
+bitcode是iOS7的特性，输出的是编译后程序的中间表现。
+包含bitcode的项目可以在appstore上完成编译和链接，可以在不提交新版本的情况下由apple进行优化
+
+36. 事件的响应链
+系统检测到硬件事件，生成IOEvent发送给 SpringBoard， SpringBoard将事件分发给需要的app进程，app进程收到之后会把事件放入当前活动的事件队列中并且触发runloop中的source1事件唤醒runloop，在source1事件回调中生成source0事件，application收到source0事件之后会从队列中取出event事件，发送给当前正在展示的window；
+window会通过hit-test查找本次事件的所在的UIResponder视图，找到最顶层视图之后检查是否能处理该事件，如果不能处理则向下传递，直至回到window和application，如果都不能处理则丢弃事件；
+
+37. UI渲染流程
+CPU计算出要显示的内容；包括视图的创建，布局计算，图片解码，文本绘制；
+计算完成的内容会传递到GPU进行渲染；
+渲染的结果会提交到帧缓冲区(framebuffer),等到垂直同步信号(VSync)到来显示到屏幕上；
+
+38. 离屏渲染的问题
+会创建额外的帧缓冲区，在切换上下文的时候会影响性能
+
+39. 什么属性会触发离屏渲染
+圆角(iOS9设置为png图片的UIImageView可以设置圆角不触发离屏渲染)、阴影shadow、光栅化shouldRasterize、遮罩masks、抗锯齿edge antialiasing、不透明group opacity、blur
+
+40. 性能最好的圆角方案
+core graphics

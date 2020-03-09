@@ -158,7 +158,7 @@ func levelOrderBFS(_ head: TreeNode?) -> [[String]] {
     var tmp: TreeNode?
     var result = [[String]]()
     
-    if head != nil {
+    if head == nil {
         return result
     }
     
@@ -239,12 +239,46 @@ func invertTree(_ root: TreeNode?) -> TreeNode? {
     return root
 }
 
+func createTreeByLevel(_ arr: [String?]) -> TreeNode? {
+    var list = arr
+    guard let rootVal = list.removeFirst() else {
+        return nil
+    }
+    
+    let root = TreeNode(rootVal)
+    var stack = [root]
+    
+    while !list.isEmpty, !stack.isEmpty {
+        let tmp = stack.removeFirst()
+        
+        if let left = list.removeFirst() {
+            let leftNode = TreeNode(left)
+            tmp.left = leftNode
+            stack.append(leftNode)
+        }
+        
+        if !list.isEmpty,
+            let right = list.removeFirst() {
+            let rightNode = TreeNode(right)
+            tmp.right = rightNode
+            stack.append(rightNode)
+        }
+    }
+    return root
+}
+
 // test
 
 var startIndex = -1
-let testTree = createTree(["a", "b", "d", "", "", "e", "", "", "c", "", "f", "", ""], &startIndex)
+let testInfo = ["a", "b", "d", "", "", "e", "", "", "c", "", "f", "", ""]
+let testTree = createTree(testInfo, &startIndex)
 
-var result = [String]()
-print(preorder(testTree, &result))
+//var result = [String]()
+//print(preorder(testTree, &result))
+//print(inorderTraversal(testTree))
 
-print(inorderTraversal(testTree))
+
+let testInfo2 = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]
+let testTree2 = createTreeByLevel(testInfo2)
+print(levelOrderBFS(testTree2))
+

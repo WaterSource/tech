@@ -1,0 +1,424 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		36D57AB9240557C600D1EBCA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D57AB8240557C600D1EBCA /* AppDelegate.m */; };
+		36D57ABC240557C600D1EBCA /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D57ABB240557C600D1EBCA /* SceneDelegate.m */; };
+		36D57ABF240557C600D1EBCA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D57ABE240557C600D1EBCA /* ViewController.m */; };
+		36D57AC2240557C600D1EBCA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 36D57AC0240557C600D1EBCA /* Main.storyboard */; };
+		36D57AC4240557C900D1EBCA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36D57AC3240557C900D1EBCA /* Assets.xcassets */; };
+		36D57AC7240557C900D1EBCA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 36D57AC5240557C900D1EBCA /* LaunchScreen.storyboard */; };
+		36D57ACA240557C900D1EBCA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D57AC9240557C900D1EBCA /* main.m */; };
+		36D57AD62405594700D1EBCA /* RunloopDetective.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D57AD42405594700D1EBCA /* RunloopDetective.m */; };
+		36D57ADD2406488800D1EBCA /* FPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D57ADC2406488800D1EBCA /* FPSLabel.m */; };
+		36D57AE4240648C700D1EBCA /* PingThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D57AE2240648C600D1EBCA /* PingThread.m */; };
+		36D57AE92406496D00D1EBCA /* CPUDetective.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D57AE82406496D00D1EBCA /* CPUDetective.m */; };
+		36D57AEF2407C6C300D1EBCA /* StackTrace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D57AEE2407C6C300D1EBCA /* StackTrace.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		36D57AB4240557C600D1EBCA /* TestForRunloop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestForRunloop.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		36D57AB7240557C600D1EBCA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		36D57AB8240557C600D1EBCA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		36D57ABA240557C600D1EBCA /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		36D57ABB240557C600D1EBCA /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		36D57ABD240557C600D1EBCA /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		36D57ABE240557C600D1EBCA /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		36D57AC1240557C600D1EBCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		36D57AC3240557C900D1EBCA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		36D57AC6240557C900D1EBCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		36D57AC8240557C900D1EBCA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		36D57AC9240557C900D1EBCA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		36D57AD42405594700D1EBCA /* RunloopDetective.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunloopDetective.m; sourceTree = "<group>"; };
+		36D57AD52405594700D1EBCA /* RunloopDetective.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunloopDetective.h; sourceTree = "<group>"; };
+		36D57ADB2406488800D1EBCA /* FPSLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPSLabel.h; sourceTree = "<group>"; };
+		36D57ADC2406488800D1EBCA /* FPSLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPSLabel.m; sourceTree = "<group>"; };
+		36D57AE2240648C600D1EBCA /* PingThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PingThread.m; sourceTree = "<group>"; };
+		36D57AE3240648C600D1EBCA /* PingThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PingThread.h; sourceTree = "<group>"; };
+		36D57AE72406496D00D1EBCA /* CPUDetective.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPUDetective.h; sourceTree = "<group>"; };
+		36D57AE82406496D00D1EBCA /* CPUDetective.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPUDetective.m; sourceTree = "<group>"; };
+		36D57AED2407C6C300D1EBCA /* TestForRunloop-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestForRunloop-Bridging-Header.h"; sourceTree = "<group>"; };
+		36D57AEE2407C6C300D1EBCA /* StackTrace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackTrace.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		36D57AB1240557C600D1EBCA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		36D57AAB240557C600D1EBCA = {
+			isa = PBXGroup;
+			children = (
+				36D57AB6240557C600D1EBCA /* TestForRunloop */,
+				36D57AB5240557C600D1EBCA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		36D57AB5240557C600D1EBCA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				36D57AB4240557C600D1EBCA /* TestForRunloop.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		36D57AB6240557C600D1EBCA /* TestForRunloop */ = {
+			isa = PBXGroup;
+			children = (
+				36D57AE62406493F00D1EBCA /* CPUDetective */,
+				36D57AE52406493F00D1EBCA /* StackTrace */,
+				36D57AE1240648C600D1EBCA /* PingThread */,
+				36D57ADA2406488800D1EBCA /* FPSLabel */,
+				36D57AD32405594700D1EBCA /* RunloopDetective */,
+				36D57AED2407C6C300D1EBCA /* TestForRunloop-Bridging-Header.h */,
+				36D57AB7240557C600D1EBCA /* AppDelegate.h */,
+				36D57AB8240557C600D1EBCA /* AppDelegate.m */,
+				36D57ABA240557C600D1EBCA /* SceneDelegate.h */,
+				36D57ABB240557C600D1EBCA /* SceneDelegate.m */,
+				36D57ABD240557C600D1EBCA /* ViewController.h */,
+				36D57ABE240557C600D1EBCA /* ViewController.m */,
+				36D57AC0240557C600D1EBCA /* Main.storyboard */,
+				36D57AC3240557C900D1EBCA /* Assets.xcassets */,
+				36D57AC5240557C900D1EBCA /* LaunchScreen.storyboard */,
+				36D57AC8240557C900D1EBCA /* Info.plist */,
+				36D57AC9240557C900D1EBCA /* main.m */,
+			);
+			path = TestForRunloop;
+			sourceTree = "<group>";
+		};
+		36D57AD32405594700D1EBCA /* RunloopDetective */ = {
+			isa = PBXGroup;
+			children = (
+				36D57AD52405594700D1EBCA /* RunloopDetective.h */,
+				36D57AD42405594700D1EBCA /* RunloopDetective.m */,
+			);
+			path = RunloopDetective;
+			sourceTree = SOURCE_ROOT;
+		};
+		36D57ADA2406488800D1EBCA /* FPSLabel */ = {
+			isa = PBXGroup;
+			children = (
+				36D57ADB2406488800D1EBCA /* FPSLabel.h */,
+				36D57ADC2406488800D1EBCA /* FPSLabel.m */,
+			);
+			path = FPSLabel;
+			sourceTree = SOURCE_ROOT;
+		};
+		36D57AE1240648C600D1EBCA /* PingThread */ = {
+			isa = PBXGroup;
+			children = (
+				36D57AE3240648C600D1EBCA /* PingThread.h */,
+				36D57AE2240648C600D1EBCA /* PingThread.m */,
+			);
+			path = PingThread;
+			sourceTree = SOURCE_ROOT;
+		};
+		36D57AE52406493F00D1EBCA /* StackTrace */ = {
+			isa = PBXGroup;
+			children = (
+				36D57AEE2407C6C300D1EBCA /* StackTrace.swift */,
+			);
+			path = StackTrace;
+			sourceTree = SOURCE_ROOT;
+		};
+		36D57AE62406493F00D1EBCA /* CPUDetective */ = {
+			isa = PBXGroup;
+			children = (
+				36D57AE72406496D00D1EBCA /* CPUDetective.h */,
+				36D57AE82406496D00D1EBCA /* CPUDetective.m */,
+			);
+			path = CPUDetective;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		36D57AB3240557C600D1EBCA /* TestForRunloop */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 36D57ACD240557C900D1EBCA /* Build configuration list for PBXNativeTarget "TestForRunloop" */;
+			buildPhases = (
+				36D57AB0240557C600D1EBCA /* Sources */,
+				36D57AB1240557C600D1EBCA /* Frameworks */,
+				36D57AB2240557C600D1EBCA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TestForRunloop;
+			productName = TestForRunloop;
+			productReference = 36D57AB4240557C600D1EBCA /* TestForRunloop.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		36D57AAC240557C600D1EBCA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = meitu;
+				TargetAttributes = {
+					36D57AB3240557C600D1EBCA = {
+						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
+					};
+				};
+			};
+			buildConfigurationList = 36D57AAF240557C600D1EBCA /* Build configuration list for PBXProject "TestForRunloop" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 36D57AAB240557C600D1EBCA;
+			productRefGroup = 36D57AB5240557C600D1EBCA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				36D57AB3240557C600D1EBCA /* TestForRunloop */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		36D57AB2240557C600D1EBCA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				36D57AC7240557C900D1EBCA /* LaunchScreen.storyboard in Resources */,
+				36D57AC4240557C900D1EBCA /* Assets.xcassets in Resources */,
+				36D57AC2240557C600D1EBCA /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		36D57AB0240557C600D1EBCA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				36D57ABF240557C600D1EBCA /* ViewController.m in Sources */,
+				36D57AB9240557C600D1EBCA /* AppDelegate.m in Sources */,
+				36D57ADD2406488800D1EBCA /* FPSLabel.m in Sources */,
+				36D57AEF2407C6C300D1EBCA /* StackTrace.swift in Sources */,
+				36D57ACA240557C900D1EBCA /* main.m in Sources */,
+				36D57ABC240557C600D1EBCA /* SceneDelegate.m in Sources */,
+				36D57AD62405594700D1EBCA /* RunloopDetective.m in Sources */,
+				36D57AE92406496D00D1EBCA /* CPUDetective.m in Sources */,
+				36D57AE4240648C700D1EBCA /* PingThread.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		36D57AC0240557C600D1EBCA /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				36D57AC1240557C600D1EBCA /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		36D57AC5240557C900D1EBCA /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				36D57AC6240557C900D1EBCA /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		36D57ACB240557C900D1EBCA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		36D57ACC240557C900D1EBCA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		36D57ACE240557C900D1EBCA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = TestForRunloop/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meitu.TestForRunloop;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "StackTrace/TestForRunloop-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		36D57ACF240557C900D1EBCA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = TestForRunloop/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meitu.TestForRunloop;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "StackTrace/TestForRunloop-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		36D57AAF240557C600D1EBCA /* Build configuration list for PBXProject "TestForRunloop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36D57ACB240557C900D1EBCA /* Debug */,
+				36D57ACC240557C900D1EBCA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		36D57ACD240557C900D1EBCA /* Build configuration list for PBXNativeTarget "TestForRunloop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36D57ACE240557C900D1EBCA /* Debug */,
+				36D57ACF240557C900D1EBCA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 36D57AAC240557C600D1EBCA /* Project object */;
+}

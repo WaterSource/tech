@@ -172,8 +172,10 @@ func buildTreeByPreMid(_ pre: [String], _ preBegin: Int, _ preEnd: Int, _ mid: [
 
 // f(n) = C(2n,n) - C(2n, n-1) = C(2n, n) / (1+n)
 
+// n为下标,m为上标
 // C(n,m)组合数 从n个数中取出m个的取法集合
 // C(n,m) = C(n-1,m-1) + C(n-1,m)
+// C(4,2) = 4!/(2!*(4-2)!) = 6
 
 func numberOfTree(_ listCount: Int) -> Int {
     guard listCount > 1 else {

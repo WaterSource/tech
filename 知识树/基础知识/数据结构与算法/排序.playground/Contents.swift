@@ -48,7 +48,7 @@ func insertSort(_ list: inout [Int]) {
 }
 
 // 快速排序
-// 在数组中选择基准值，和基准值比较大小，小的放在基准左侧，打的放在基准右侧
+// 在数组中选择基准值，和基准值比较大小，小的放在基准左侧，大的放在基准右侧
 func quickSort(arr: inout [Int], begin: Int, end: Int) {
     guard begin < end else {
         return

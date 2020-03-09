@@ -1,5 +1,8 @@
 ## Runloop
 
+[参考链接](https://www.jianshu.com/p/ae0118f968bf)
+[参考链接](https://www.jianshu.com/p/2f038d247aa2)
+
 应用开始运行之后，不做任何操作，应用就像静止了一样，不会有自发的产生动作；如果用户做了操作，就会有对应的响应事件发生，感觉就像是应用一直处于随时待命的状态。这就是runloop的效果。
 
 ### 事件处理机制与图像渲染过程
@@ -19,7 +22,7 @@ Runloop主要是处理6类事件:
 非延迟的performSelector立即调用，dispatch_after立即调用，block回调。
 ```
 
-* Main_Dispatch_Queue事件
+* `Main_Dispatch_Queue`事件
 
 ```
 GCD中dispatch到main_queue的block，会被dispatch到main_loop执行。
@@ -34,6 +37,9 @@ GCD中dispatch到main_queue的block，会被dispatch到main_loop执行。
 * Source0事件
 
 ```
+进程内的事件处理，只传递了对应事件的函数指针，不会主动触发事件，会被标记为待处理，由runloop处理事件；
+```
+```
 处理UIEvent、CFSocket这类事件。需要手动触发。
 Source0是需要唤醒runloop及时响应执行的，如果runloop此时在休眠等待 mach_msg事件，那么就会通过Source1事件来唤醒runloop执行。
 ```
@@ -45,6 +51,9 @@ Source0再触发 __UIApplicationHandleEventQueue()。
 
 * Source1事件
 
+```
+系统层进程间的事件传递，能够直接唤醒runloop，包含了事件本身和对应的函数指针，能够直接处理；
+```
 ```
 处理系统内核的mach_msg事件。
 ```
@@ -100,6 +109,8 @@ Runloop在执行到特定时候会触发的事件
 - 结束runloop
 
 ![](https://tva1.sinaimg.cn/large/006y8mN6gy1g9aa06jvrtj30p00j8dkh.jpg)
+
+`图中 7.休眠等待唤醒，左侧列出的可以唤醒的事件，source0需要改成source1`
 
 #### Runloop Mode
 

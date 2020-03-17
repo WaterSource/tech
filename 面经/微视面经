@@ -1,0 +1,61 @@
+微视面经
+
+1. 数组和链表的区别
+链表是链式的存储结构，数组是顺序的储存结构；
+链表通过指针连接元素与元素，数组所有元素按次序依次存储；
+
+链表插入、删除元素比较简单，不需要移动元素，比较容易实现长度扩充，但是寻找某个元素较为困难；
+数组寻找某个元素较为简单，但是插入、删除元素比较复杂；
+
+数组的随机访问效率高，可以通过首地址向后偏移的方式访问到具体元素；
+链表的空间是分散的，查找数据需要依次向后遍历；
+
+2. MRC和ARC的区别
+mrc手动内存管理，arc自动内存管理；
+arc会在适当位置插入release和autorelease；
+
+3. autoreleasePool的对象管理，什么时候释放
+在最近的一个runloop迭代结束时释放；
+手动调用drain；
+
+4. weak和assign的区别
+weak只能修饰对象类型，assign可以修饰基本数据类型和对象类型；
+
+5. weak怎么实现自动置nil
+runtime会在持有的对象中创建weak表，weak对象引用计数为0的时候会在表中被置为nil；
+持有对象释放的时候会将weak修饰的指针置为nil；
+
+6. 图片缓存结构
+内存读取，磁盘读取，网络请求图片下载，图片解码；
+缓存过期机制；
+内存键值对，图片url-UIImage；
+
+7. 性能优化
+卡顿优化(RunLoop状态的切换耗时)、耗电优化、启动优化、安装包瘦身
+
+8. TCP、UDP区别
+TCP会建立链接，提供可靠的数据传输，有超时重发，丢弃重复数据，流量控制等功能；
+UDP不建立连接，报头不同；
+
+9. 几种多线程的方式及其区别
+pthread，基于C语言的线程API，可以跨平台
+NSThread，OC面向对象封装的对象
+GCD，操作队列执行任务
+NSOperation/NSInvocationOperation，是对GCD的封装
+
+10. 队列取消GCD任务
+dispatch_block_cancel 可以取消还未开始的任务
+外部变量控制任务执行
+dispatch_suspend 挂起对应队列，可以暂停还未执行的任务
+
+11. UIView、CALayer的关系和区别
+layer是view的属性；
+view负责接收响应事件，继承自UIReponder，是对layer的封装对象；
+layer是图层，继承自NSObject；修改layer的大小、颜色会同步修改view的；
+
+12. CaLayer设置属性的时候有动画，UIView没有，为什么
+layer是定义在core animation框架中的，是CA的操作核心；
+view默认情况下禁止了layer动画，在animation block中开启；
+
+13. 快排的过程
+选定基准值，将区域内比基准值小的移到基准前面，比基准值大的移到基准值后面；

@@ -1,0 +1,99 @@
+音乐题
+
+1. 项目难点
+
+2. 直播聊天模块设计
+
+3. topK
+
+4. 二叉树前后续遍历
+-
+
+5. 保障app数据安全？
+	1. 网络安全
+	2. ud数据安全
+	3. 防越狱方法名安全 混淆 添加无用方法
+	4. swift安全性稍高
+	5. block
+
+	1. 防护fishhook 交换 Exchange方法
+	2. 绕过符号断点
+	3. 代码注入检测
+	4. 按钮点击防护
+
+6. runloop
+	runloop是什么，是线程相关的基础框架的一部分，是一个事件的处理循环，用来调度工作和处理输入事件；使得线程在有工作的时候处理工作，没工作的时候处于休眠状态；
+	跨线程调用的情况需要获取对应的CFRunLoopRef；
+
+	runloop和autoreleasepool的关系，每当一次循环结束的时候，会释放一次autoreleasepool，同时释放pool中的变量；
+
+	runloop的使用场景，autoreleasepool的创建和释放，定时器，performSelecter(after),物理事件响应，界面UI更新，网络请求；
+
+7. 多线程的几种方式 线程同步锁
+	几种方式，GCD，pthread，NSTread，NSOperation；
+
+	锁，信号量，自旋锁，互斥锁，递归锁，条件锁；
+
+8. https
+-
+
+9. Block
+	block是什么，是将其上下文封装起来的结构体；
+	为什么会产生循环引用，block持有的对象也持有了block本身；
+
+10. pb为什么小
+	tlv算法 value对应的key(tag)，为二进制，标识字段编号和数据类型；
+	针对整形、布尔、字符串有进一步优化；
+
+11. weak原理
+	系统存在全局字典，保存每个对象的weak指针列表，在引用计数为0的时候把对应的weak指针对象置为nil；
+
+12. property修饰
+
+
+13. 高性能圆角
+	通过CGContext裁剪圆角；
+
+14. 在函数里定义一个block，系统帮你做了什么事
+	变量的捕获
+	引用计数管理
+	如果是作为参数传递，或者调用了copy方法，会从栈复制到堆
+
+15. 一个点击事件的最顶层方法
+	点击屏幕的时候产生了事件，也就是UIEvent对象；
+	把事件加入到UIAplication的事件队列中，查找事件的响应方；
+	通过hitTest和pointInside方法，按照UIApplication,UIWindow,VC,SuperView的顺序查找响应方；
+
+16. 编译器怎么生成可执行文件
+	
+	预处理 - 词法分析 - 语法分析 - 静态分析 - 生成中间代码和优化 - 汇编 - 链接
+
+17. https原理
+
+	客户端请求服务端证书，通过CA的公钥验证证书，客户端用证书的公钥加密一个随机值，服务器将握手内容通过随机值对称加密返回验证
+
+18. runtime原理
+	runtime是一个可以在运行时创建对象，检查对象，修改类和对象的一系列方法；
+
+19. category和extension的区别是什么
+	extension可以声明实例变量和方法，在编译期间就已经生效；
+	category可以为系统类添加分类，extension不行；
+	category是在运行时实现的，可以声明方法和对应实现；
+	category可以添加属性，但是不会生成对应的成员变量，getter和setter方法；
+
+20. 离屏渲染
+	当前屏幕渲染，GPU渲染操作是在当前用于现实的屏幕缓冲区进行；
+	离屏渲染，GPU在当前屏幕缓冲区意外开辟一个缓冲区进行渲染操作；
+
+	iOS9 imageView里png图片设置圆角不会触发离屏渲染(没有设置阴影)；
+	使用Core Graphics框架画出圆角;
+
+21. hash表原理
+	https://www.cnblogs.com/wuchaodzxx/p/7396599.html
+	使用hash算法计算出数组下标，主要会关注计算出相同下标的处理方式；
+	开放定址法
+
+21. bitcode
+	
+
+
